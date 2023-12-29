@@ -1,0 +1,61 @@
+/* navbar.css */
+
+.bits-text {
+    font-weight: bold;
+    font-family: 'YourPreferredFont', sans-serif;
+    color: gray;
+    padding-left: 25px;
+    margin-right: -6px;
+}
+
+.bids-text {
+    font-style: italic;
+    font-weight: 1000;
+    font-family: 'YourPreferredFont', sans-serif;
+    color: black;
+}
+
+.form-control {
+    width: 300px;
+}
+
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar {
+    width: 300px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.profile-button,
+.sell-button {
+    margin-left: 10px;
+}
+
+.icon {
+    margin-right: 5px;
+}
+
+.profile-button {
+    color: #333;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.sell-button {
+    color: #fff;
+    background-color: black;
+}
+
+.profile-button:hover,
+.sell-button:hover {
+    background-color: #d6d8db;
+}

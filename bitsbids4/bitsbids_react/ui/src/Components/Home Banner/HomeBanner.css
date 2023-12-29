@@ -1,0 +1,34 @@
+/* HomeBanner.css */
+
+.main_slider {
+    height: 55vh; /* Adjust the height as needed */
+    display: flex;
+    align-items: center;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.5rem;
+    color: white; /* Adjust the color as needed */
+    font-weight: 500;
+  }
+  
+  .banner-title {
+    font-size: 3rem;
+    color: #ffffff; /* Adjust the color as needed */
+    margin-bottom: 20px; /* Adjust the margin as needed */
+  }
+  
+  .banner-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .banner-link:hover {
+    text-decoration: underline;
+  }
+  .Carousel {
+    margin-top: -15px; /* Remove any default margin-bottom */
+  }
+  
