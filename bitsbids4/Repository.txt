@@ -1,0 +1,47 @@
+@Repository
+public interface UserRepository extends JpaRepository<UserModel, Long> {
+
+        boolean existsByEmail(String email);
+}
+so here i do not need to write a sql query the @ repository figures out the query i want based on the function name
+ChatGPT
+Yes, that's correct.
+In Spring Data JPA, you don’t need to write SQL queries for common operations. The @Repository and extending JpaRepository provides default methods like findAll, findById, save, etc. For custom queries, you can define methods by naming them appropriately.
+
+For example, existsByEmail(String email) is a query derived from the method name. Spring Data JPA automatically generates the SQL to check if an email exists in the database based on this method signature.
+
+Can i write any name or is ther a particular template of function names which auto understands required query
+
+ChatGPT
+There is a naming convention for method names in Spring Data JPA that it uses to automatically generate queries. Here are some patterns:
+
+Find by field:
+findBy<FieldName>(...) - Finds entities by a field.
+Example: findByEmail(String email)
+
+Exists by field:
+
+existsBy<FieldName>(...) - Checks if an entity with the specified field value exists.
+Example: existsByEmail(String email)
+Count by field:
+
+countBy<FieldName>(...) - Counts entities with the specified field value.
+Example: countByStatus(String status)
+Delete by field:
+
+deleteBy<FieldName>(...) - Deletes entities by the field value.
+Example: deleteByLastName(String lastName)
+Custom queries:
+
+For more complex queries, use @Query annotation.
+Example:
+@Query("SELECT u FROM UserModel u WHERE u.email = ?1")
+UserModel findUserByEmail(String email);
+
+These patterns help Spring Data JPA automatically generate the required queries based on the method names.
+
+
+
+
+
+

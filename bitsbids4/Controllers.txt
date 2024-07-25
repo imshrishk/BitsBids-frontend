@@ -1,0 +1,33 @@
+@PostMapping(path = "/")
+    public BidModel addBid(@RequestBody BidModel bidModel, @RequestParam Long productId, @RequestParam Long userId) {
+        return bidService.addBid(bidModel, productId, userId);
+    }
+
+@PostMapping(path = "/"): This annotation maps HTTP POST requests to the root URL (/) of the controller.
+
+
+@RequestBody BidModel bidModel: Spring automatically converts the JSON data in the request body into a BidModel object.
+@RequestParam Long productId: Retrieves the productId from the query parameters of the request.
+@RequestParam Long userId: Retrieves the userId from the query parameters of the request.
+Return Value: The method returns a BidModel object (As Initialised in public BidModel), which will be sent back as the response.
+
+bidService.addBid(bidModel, productId, userId): This line calls a method in bidService to process the bid using the provided bidModel, productId, and userId, and returns the result.
+
+
+public Iterable<BidModel> getBidsByUserId(@PathVariable Long userId) 
+@PathVariable Long userId: Extracts userId from the URL path. For example, if the URL is /bids/123, userId would be 123.
+
+Return Type: Iterable<BidModel> means the method returns a collection of BidModel objects, which will be sent as the response.
+
+In Java, a collection is a broader term than an array. It refers to various types of objects that hold multiple elements, including:sets linked lists queues mpas etc
+
+-----------------------------------------------
+@Autowired
+private BidRepository bidRepository;
+
+@Autowired is telling Spring to automatically provide an instance of BidRepository for you.
+Without @Autowired, you would need to:
+
+Create a Constructor: Add a constructor to your class to accept dependencies.
+
+Manually Instantiate: Use new to create instances of your dependencies and pass them to the constructor.

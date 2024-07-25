@@ -1,0 +1,44 @@
+app config like prot database connectiion is done in resources/application properties
+
+Repository: Interface for data access, typically extends JpaRepository or CrudRepository for CRUD operations on the database.
+Model: Java class representing the entity or data structure, annotated with @Entity.
+Controller: Handles HTTP requests, uses @RestController annotation and defines request mappings with @GetMapping, @PostMapping, etc.
+
+Controller: Like routes, it links endpoints (URLs) with functions. It handles HTTP requests and responses.
+Repository: Defines the functions to interact with the database (like findAll, save, delete). It simplifies database queries (like SELECT statements).
+
+Controller receives a request.
+Controller calls a Service method.
+Service uses a Repository to access the database.
+Repository performs database operations and returns data.
+Service processes the data and returns it to the Controller.
+Controller sends the response back to the client
+
+so service is like a function, controller is like router, and repository is like the sql query
+ChatGPT
+Yes, exactly:
+
+Service: Like a function, it contains business logic and processes data.
+Controller: Like a router, it handles HTTP requests and directs them to the appropriate service.
+Repository: Like an SQL query, it interacts with the database to fetch or save data.
+
+
+@Autowired is used to automatically inject dependencies into your classes
+Dependencies: Objects or services your class needs to work, like a database handler, another service, or a configuration.
+Example in Node.js context:
+
+Dependency Injection: Similar to how you might use require to include modules in Node.js. For example, if you have a module for database operations, you inject it into your classes or functions that need it.
+In Spring, @Autowired does this automatically. You define what classes or services you need, and Spring provides them for you.
+
+When you run a Spring Boot application:
+
+Application Startup: Spring Boot initializes the application context, which involves setting up the environment and configurations.
+
+Component Scanning: Spring scans for components (e.g., @Component, @Service, @Repository, @Controller) in the specified packages.
+
+Bean Creation: Spring creates instances of beans (such as services and repositories) and manages their lifecycle.
+
+Dependency Injection: Spring automatically injects dependencies into beans using @Autowired. For instance, it provides an instance of BidRepository to MyService.
+
+Application Ready: The application starts listening for requests (if it’s a web application) or performs other startup tasks as defined.    
+ The @SpringBootApplication annotation includes @ComponentScan, which defaults to scanning the package where the main application class is located and its sub-packages.
