@@ -1,0 +1,17 @@
+export default [
+	{ id: 1, name: "Home Decor & Accessories" },
+	{ id: 2, name: "Beauty & Personal Care" },
+	{ id: 3, name: "Kitchen Appliances" },
+	{ id: 4, name: "Outdoor & Garden Supplies" },
+	{ id: 5, name: "Automotive Parts & Accessories" },
+	{ id: 6, name: "Health & Wellness" },
+	{ id: 7, name: "Musical Instruments" },
+	{ id: 8, name: "Jewelry & Watches" },
+	{ id: 9, name: "Office Supplies" },
+	{ id: 10, name: "Travel & Luggage" },
+	{ id: 11, name: "Smart Home Devices" },
+	{ id: 12, name: "Baby & Kids Products" },
+	{ id: 13, name: "Art & Craft Supplies" },
+	{ id: 14, name: "Fitness & Exercise Equipment" },
+	{ id: 15, name: "Photography & Video Gear" },
+];
