@@ -1,41 +1,44 @@
 package com.fin.oopsproject.Controllers;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
-import java.util.ArrayList;
-
-
-@Entity   // helps map SQL table with this class
-@Table(name = "test")
-@Data
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
 
-    @Id   //this makes user_id the primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // this generates a random value for user_id
-    private long user_id;
-
-    @Column(name = "username",nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "password",nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "email")
     private String email;
-    public User(){
 
+    @Column(name = "campus_id", unique = true)
+    private String campusID;
+
+    @Column(name = "hostel")
+    private String hostel;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "money")
+    private Long money;
+
+    // Getters and setters
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public <E> User(String email, String s, ArrayList<E> es) {
-    }
-
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -62,13 +65,35 @@ public class User {
         this.email = email;
     }
 
-    public User(long user_id, String username, String password, String email) {
-        this.user_id = user_id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public String getCampusID() {
+        return campusID;
     }
 
+    public void setCampusID(String campusID) {
+        this.campusID = campusID;
+    }
 
+    public String getHostel() {
+        return hostel;
+    }
+
+    public void setHostel(String hostel) {
+        this.hostel = hostel;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Long getMoney() {
+        return money;
+    }
+
+    public void setMoney(Long money) {
+        this.money = money;
+    }
 }
-

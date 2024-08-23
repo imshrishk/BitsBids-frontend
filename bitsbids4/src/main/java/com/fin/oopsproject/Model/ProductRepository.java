@@ -1,6 +1,8 @@
 package com.fin.oopsproject.Model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,9 +11,9 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<ProductModel, Long> {
     List<ProductModel> findByCategory(String category);
 
-    List<ProductModel> findAllBy();
+    List<ProductModel> findAll();
 
-    List<ProductModel> findAllBySold(boolean sold);
+    List<ProductModel> findAllBySold(String sold);
 
     Iterable<ProductModel> findAllByUser(UserModel userModel);
 }

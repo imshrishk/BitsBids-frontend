@@ -1,12 +1,16 @@
 package com.fin.oopsproject.Controllers;
 
 import com.fin.oopsproject.Model.*;
-import com.fin .oopsproject.Model.*;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 
 @Service
 public class ProductService {
@@ -19,7 +23,31 @@ public class ProductService {
     @Autowired
     private UserRepository userRepository;
 
-    // Create
+    @Autowired
+    private TransactionService transService;
+
+    @Scheduled(fixedRate = 60000) // Check every minute on completed auctions
+    public void scheduledAuctionCheck() {
+        List<ProductModel> allProducts = productRepository.findAll();
+        for (ProductModel product : allProducts) {
+            checkAuctionAndTransfer(product.getProductId());
+        }
+    }
+
+    public void checkAuctionAndTransfer(Long productId) {
+        ProductModel productModel = productRepository.findById(productId).orElseThrow(() -> 
+            new IllegalArgumentException("Product not found"));
+
+        Date currentDate = new Date();
+        
+        if (currentDate.after(productModel.getExpiryDate())) {
+            transService.transferMoney(productModel);
+            productModel.setSold("sold"); // Mark product as sold or update status as needed
+            productRepository.save(productModel);
+        }
+    }
+    
+    // USer  needs to pass in everything in request
     public ProductModel addProduct(ProductModel productModel, Long userId) {
         UserModel userModel = userRepository.findById(userId).orElse(null);
         assert userModel != null;
@@ -37,19 +65,35 @@ public class ProductService {
         assert userModel != null;
         return productRepository.findAllByUser(userModel);
     }
-
-    // Update
-    public ProductModel updateProduct(ProductModel productModel) {
-        ProductModel existingProduct = productRepository.findById(productModel.getProductId()).orElse(null);
-        assert existingProduct != null;
-        existingProduct.setProductName(productModel.getProductName());
-        existingProduct.setImage(productModel.getImage());
-        existingProduct.setDetails(productModel.getDetails());
-        existingProduct.setCategory(productModel.getCategory());
-        existingProduct.setUser(productModel.getUser());
-        existingProduct.setStartingBid(productModel.getStartingBid());
-        return productRepository.save(existingProduct);
+    
+    public Iterable<BidModel> getBidsByProductId(Long productId) {
+        ProductModel productModel = productRepository.findById(productId).orElse(null);
+        assert productModel != null;
+        return bidRepository.findAllByProduct(productModel);
     }
+
+  // Update
+public ProductModel updateProduct(ProductModel productModel) {
+    // Ensure the product ID is not null and the product exists
+    if (productModel.getProductId() == null) {
+        throw new IllegalArgumentException("Product ID must not be null");
+    }
+
+    ProductModel existingProduct = productRepository.findById(productModel.getProductId())
+            .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + productModel.getProductId()));
+
+    // Update the fields of the existing product with the new details
+    existingProduct.setProductName(productModel.getProductName());
+    existingProduct.setImage(productModel.getImage());
+    existingProduct.setDetails(productModel.getDetails());
+    existingProduct.setCategory(productModel.getCategory());
+    existingProduct.setUser(productModel.getUser());
+    existingProduct.setStartingBid(productModel.getStartingBid());
+
+    // Save the updated product to the repository
+    return productRepository.save(existingProduct);
+}
+
 
     // Delete
     public String deleteProduct(Long productId) {
@@ -60,8 +104,8 @@ public class ProductService {
     // Get all
     public Iterable<ProductModel> getAllProducts() {
         // Find the products that are not sold
-        List<ProductModel> products = productRepository.findAllBy();
-        products.removeIf(ProductModel::isSold);
+        List<ProductModel> products = productRepository.findAll();
+        products.removeIf(product -> "sold".equals(product.getSold()));//except those that have been sold
         return products;
     }
 
@@ -73,7 +117,7 @@ public class ProductService {
     // Get featured products
     // Find the top 3 products with maximum number of bids
     public Iterable<ProductModel> getFeaturedProducts() {
-        List<BidModel> bids = bidRepository.findAllBy();
+        List<BidModel> bids = bidRepository.findAll();
         HashMap<Long, Integer> productBids = new HashMap<>();
         for (BidModel bid : bids) {
             Long productId = bid.getProduct().getProductId();
@@ -83,7 +127,7 @@ public class ProductService {
                 productBids.put(productId, 1);
             }
         }
-        List<ProductModel> products = productRepository.findAllBySold(false);
+        List<ProductModel> products = productRepository.findAllBySold("sold");
         products.sort((o1, o2) -> {
             Integer o1Bids = productBids.get(o1.getProductId());
             Integer o2Bids = productBids.get(o2.getProductId());

@@ -17,7 +17,7 @@ public class ProductController {
         return productService.addProduct(productModel, userId);
     }
 
-    // Read
+    // gets product info based on product id
     @GetMapping(path = "/")
     public ProductModel getProductById(@RequestParam Long productId) {
         return productService.getProductById(productId);
@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     // Get all
-    @GetMapping(path = "/list")
+    @GetMapping(path = "/listAll")
     public Iterable<ProductModel> getAllProducts() {
         return productService.getAllProducts();
     }
@@ -51,6 +51,7 @@ public class ProductController {
     public Iterable<ProductModel> getProductsByCategory(@RequestParam String category) {
         return productService.getProductsByCategory(category);
     }
+    
 
     //@GetMapping(path = "/featured")
     //public Iterable<ProductModel> getFeaturedProducts() {

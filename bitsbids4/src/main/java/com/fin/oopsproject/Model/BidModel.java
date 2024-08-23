@@ -1,5 +1,6 @@
 package com.fin.oopsproject.Model;
 
+import java.util.Date;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,7 +17,7 @@ public class BidModel {
     private UserModel userId;
 
     @Column(name = "bid")
-    private int bid;
+    private Long bid;
 
     @ManyToOne(targetEntity = ProductModel.class)
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
@@ -25,12 +26,19 @@ public class BidModel {
     @Column(name ="frozen")
     private boolean frozen;
 
+    @Column(name ="time")
+    private Date time;
+
+    @Column(name ="activeStatus")
+    private boolean active;
 
 
-    public BidModel(UserModel userId, int bid, ProductModel product) {
+
+    public BidModel(UserModel userId, Long bid, ProductModel product) {
         this.userId = userId;
         this.bid = bid;
         this.product = product;
+        this.active = true;
     }
 
     public BidModel() {
@@ -55,11 +63,11 @@ public class BidModel {
         return userId;
     }
 
-    public int getBid() {
+    public Long getBid() {
         return bid;
     }
 
-    public void setBid(int bid) {
+    public void setBid(Long bid) {
         this.bid = bid;
     }
 
@@ -73,5 +81,12 @@ public class BidModel {
 
     public ProductModel getProduct() {
         return product;
+    }
+    public void setActiveStatus(boolean active) {
+        this.active = active;
+    }
+
+    public boolean getActiveStatus() {
+        return active;
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1/bids")
+@RequestMapping(path = "/bids")
 public class BidController {
     @Autowired
     private BidService bidService;
@@ -30,7 +30,7 @@ public class BidController {
     }
 
     @GetMapping(path = "/highestBid/{productId}")
-    public int getHighestBid(@PathVariable Long productId) {
+    public Long getHighestBid(@PathVariable Long productId) {
         return bidService.getHighestBid(productId);
     }
 

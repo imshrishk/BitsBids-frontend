@@ -67,12 +67,14 @@ public class MessageService {
         assert productModel != null;
         HashSet<MessageModel> messages = new HashSet<>();
         List<BidModel> bids = bidRepository.findAllByProduct(productModel);
-        int highestBid = 0;
+        Long highestBid = null;
+
         for (BidModel bid : bids) {
             if (bid.getBid() > highestBid) {
                 highestBid = bid.getBid();
             }
         }
+        
         for (BidModel bid : bids) {
             if (bid.getBid() == highestBid) {
                 messages.addAll(

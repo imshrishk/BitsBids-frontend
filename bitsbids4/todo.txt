@@ -1,0 +1,39 @@
+remove user.java and instead use userModel.java
+
+figure out cookies and tokens
+frontend sends request -> "doesUserPasswordExist" ->response yes? -> give it a token (for that we must define setUser) -> turn token to cookie -> whenever user requires his custom stuff (getUSer type funcction to retrieve userId from cookie)
+https://chatgpt.com/c/4dfe230d-df2f-4092-a581-3d4c3264463b 
+use the link above fot configuring cookies and stufff
+
+
+USERMODEL not working to insert, this is causing issues in BIDMODEL and transacctions, unify user.java and usermodel.java
+
+
+so once we have user signed in with a cookie, he should be able to:
+
+    On his profile: (all the functionalities exist)
+    Get all his bids with frozen status
+    get his listed products
+    get his info which has given and edit it
+
+
+Required Functionalities: 
+    buyer must be able to view all productsListed (later feature: search) // done with product category too
+    onClicking on a listed product he must be able to view product details (amazon like UI). // getProductById in product controller
+    
+    completely reconfigure bids
+    user must be able to make a bid (only if he has enough moeny)
+    seller can view all bids
+    seller must be able to choose 
+    on bid being accepted money transfer from buyer to seller
+    do hashing
+    
+
+
+Later functionalities: 
+    concurrency control for bids
+    time limits for bidds
+    messaging features
+    filter and search products
+    block users from buying
+    able to give reviews to sellers (sellers having rating, can rate a seller only if u have bought from him)

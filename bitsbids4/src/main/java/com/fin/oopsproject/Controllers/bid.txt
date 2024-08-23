@@ -1,0 +1,69 @@
+MESSAGES LITE FOR NOW
+
+bid model add time of bid
+bid model add status "active" "inactive" --> "active" if u are the top bid
+"inactive" if product sold or no longer the highest bid. or if bid cancelled. if user removed, or if product no longer on sale
+
+in product model, add current bid, add sold_status "on auction" "off auction"  "sold"
+in product model add time limit
+in product model add min bid increment
+
+add in bid service, "view all bids for a product
+in bodService " addbid" also add feature such that cant place bid if bid  - currenthighest  < minIncrement
+
+in product service as soon as time limit is hit sell the product
+no bid allowed if bit time > product time limit
+
+in bid service also add feature that u cannot buy something if u dont have enough balance. 
+ur bids are a part of your balance, so when calculating balance subtract active bids
+
+u can call back your bids
+
+crete a separate transaction model/controller/service not only because u wanna keep track of transactions but because
+u want to reuse transaction for some other project
+
+
+
+List of Tasks to Accomplish
+Bid Model
+Add the time of bid.//
+Add a status field://
+
+"active" if the user is the top bid.
+"inactive" if:
+Product is sold.
+No longer the highest bid.
+Bid is cancelled.
+User is removed.
+Product is no longer on sale.
+
+
+Product Model
+Add current bid field.//
+Add sold_status field with values://
+"on auction"
+"off auction"
+"sold"
+Add time limit field.
+Add minimum bid increment field.
+
+
+Bid Service
+// Implement "view all bids for a product". done in productservice
+Implement "add bid" with features:
+    Ensure the new bid amount - current highest bid >= minimum increment.
+    Ensure sufficient user balance, considering active bids.
+
+Allow users to call back their bids.(new highest bid would become the last bid from getBidsbyproduct)
+
+Product Service
+Automatically sell the product as soon as the time limit is hit.
+Prevent bids if the bid time exceeds the product's time limit.
+Add feature to remove product from autcion "off_auction"
+
+
+Additional Tasks
+Create a separate transaction model/controller/service:
+Track transactions.
+Reuse for other projects.
+Tranfer Money whever bid time over

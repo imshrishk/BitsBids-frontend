@@ -31,7 +31,8 @@ public class UserService {
 
     public UserModel getUserById(Long userId) {
             return userRepository.findById(userId).orElse(null);
-        }
+    }
+    
 
         public Iterable<UserModel> getAllUsers() {
             return userRepository.findAll();
@@ -57,4 +58,6 @@ public class UserService {
             userModel.setPhone(phone);
             return userRepository.save(userModel);
         }
+
+        
 }

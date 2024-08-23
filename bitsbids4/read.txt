@@ -1,3 +1,6 @@
+using maven ./mvnw spring-boot:run
+
+
 app config like prot database connectiion is done in resources/application properties
 
 Repository: Interface for data access, typically extends JpaRepository or CrudRepository for CRUD operations on the database.
