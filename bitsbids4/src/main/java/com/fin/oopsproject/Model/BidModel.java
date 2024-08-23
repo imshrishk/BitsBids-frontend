@@ -29,10 +29,8 @@ public class BidModel {
     @Column(name ="time")
     private Date time;
 
-    @Column(name ="activeStatus")
+    @Column(name ="active_status")
     private boolean active;
-
-
 
     public BidModel(UserModel userId, Long bid, ProductModel product) {
         this.userId = userId;
@@ -42,25 +40,33 @@ public class BidModel {
     }
 
     public BidModel() {
-
     }
 
+    // Getters and Setters
     public Long getBidId() {
         return bidId;
     }
-    public boolean isFrozen() {
-        return frozen;
-    }
 
-    public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
-    }
-    public Long getUserId() {
-        return userId.getUserId();
+    public void setBidId(Long bidId) {
+        this.bidId = bidId;
     }
 
     public UserModel getUser() {
         return userId;
+    }
+
+    public void setUser(UserModel userId) {
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId.getUserId();
+    }
+
+    public void setUserId(Long userId) {
+        if (this.userId != null) {
+            this.userId.setUserId(userId);
+        }
     }
 
     public Long getBid() {
@@ -71,22 +77,35 @@ public class BidModel {
         this.bid = bid;
     }
 
-    public void setUser(UserModel userId) {
-        this.userId = userId;
+    public ProductModel getProduct() {
+        return product;
     }
 
     public void setProduct(ProductModel product) {
         this.product = product;
     }
 
-    public ProductModel getProduct() {
-        return product;
-    }
-    public void setActiveStatus(boolean active) {
-        this.active = active;
+    public boolean isFrozen() {
+        return frozen;
     }
 
-    public boolean getActiveStatus() {
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -1,6 +1,5 @@
 package com.fin.oopsproject.Model;
 
-import com.fin.oopsproject.Controllers.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

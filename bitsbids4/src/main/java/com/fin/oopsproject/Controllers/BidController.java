@@ -19,10 +19,11 @@ public class BidController {
     }
 
 // Create
-    @PostMapping(path = "/")
-    public BidModel addBid(@RequestBody BidModel bidModel, @RequestParam Long productId, @RequestParam Long userId) {
-        return bidService.addBid(bidModel, productId, userId);
-    }
+        @PostMapping(path = "/")
+        public BidModel addBid(@RequestParam Long bidAmount, @RequestParam Long productId, @RequestParam Long userId) {
+           System.out.println("hello ");
+            return bidService.addBid(productId, userId, bidAmount);
+        }
 
     @GetMapping(path = "/{userId}")
     public Iterable<BidModel> getBidsByUserId(@PathVariable Long userId) {
@@ -34,9 +35,9 @@ public class BidController {
         return bidService.getHighestBid(productId);
     }
 
-    @PostMapping(path = "/freezeBid")
-    public BidModel freezeBid(@RequestParam Long bidId, @RequestParam Long userId) {
-        return bidService.freezeBid(bidId, userId);
+    @PostMapping(path = "/freezeBid") //might need to set active status false
+    public BidModel freezeBid(@RequestParam Long bidId) {
+        return bidService.freezeBid(bidId);
     }
 
     @GetMapping(path = "/products/{userId}")

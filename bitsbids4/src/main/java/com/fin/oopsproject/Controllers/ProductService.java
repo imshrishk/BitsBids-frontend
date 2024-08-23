@@ -49,11 +49,13 @@ public class ProductService {
     
     // USer  needs to pass in everything in request
     public ProductModel addProduct(ProductModel productModel, Long userId) {
-        UserModel userModel = userRepository.findById(userId).orElse(null);
-        assert userModel != null;
+        UserModel userModel = userRepository.findById(userId).orElseThrow(() -> 
+            new EntityNotFoundException("User not found with id: " + userId)
+        );
         productModel.setUser(userModel);
         return productRepository.save(productModel);
     }
+    
 
     // Read
     public ProductModel getProductById(Long productId) {

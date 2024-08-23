@@ -6,20 +6,20 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class UserModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure strategy is specified
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // allows auto increment
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "campus_id", unique = true)
+    @Column(name = "campus_id")
     private String campusID;
 
     @Column(name = "hostel")
@@ -41,12 +41,12 @@ public class UserModel {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
     public String getPassword() {
