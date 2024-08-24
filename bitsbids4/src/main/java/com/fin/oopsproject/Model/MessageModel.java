@@ -1,5 +1,8 @@
 package com.fin.oopsproject.Model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -24,18 +27,19 @@ public class MessageModel {
     @JoinColumn(name = "receiver_id", referencedColumnName = "user_id")
     private UserModel receiver;
 
-    @ManyToOne(targetEntity = ProductModel.class)
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    private ProductModel product;
+    
 
     public MessageModel() {
     }
 
-    public MessageModel(String message, UserModel sender, ProductModel product) {
+    public MessageModel(String message, UserModel sender, UserModel receiver) {
         this.message = message;
         this.sender = sender;
-        this.product = product;
+        this.receiver = receiver;
+        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+    
+    
 
     public Long getMessageId() {
         return messageId;
@@ -73,11 +77,5 @@ public class MessageModel {
         this.sender = sender;
     }
 
-    public ProductModel getProduct() {
-        return product;
-    }
-
-    public void setProduct(ProductModel product) {
-        this.product = product;
-    }
+    
 }

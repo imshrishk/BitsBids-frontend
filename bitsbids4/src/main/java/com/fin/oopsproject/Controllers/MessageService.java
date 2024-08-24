@@ -1,10 +1,10 @@
 package com.fin.oopsproject.Controllers;
 
 import com.fin.oopsproject.Model.*;
-import com.fin.oopsproject.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -21,16 +21,18 @@ public class MessageService {
     @Autowired
     private BidRepository bidRepository;
 
-    public MessageModel addMessage(MessageModel messageModel, Long productId, Long userId, Long receiverId) {
-        messageModel.setProduct(productRepository.findById(productId).orElse(null));
-        messageModel.setSender(userRepository.findById(userId).orElse(null));
-        messageModel.setReceiver(userRepository.findById(receiverId).orElse(null));
-        messageModel.setTimestamp(java.time.LocalDateTime.now().toString());
-        return messageRepository.save(messageModel);
-    }
+    public MessageModel addMessage(String messageText, Long userId, Long receiverId) {
+        MessageModel messageModel = new MessageModel();
+        messageModel.setMessage(messageText);
+        messageModel.setTimestamp(LocalDateTime.now().toString());
 
-    public Iterable<MessageModel> getMessagesByProductId(Long productId) {
-        return messageRepository.findAllByProductId(productId);
+        UserModel sender = userRepository.findById(userId).orElseThrow();
+        UserModel receiver = userRepository.findById(receiverId).orElseThrow();
+
+        messageModel.setSender(sender);
+        messageModel.setReceiver(receiver);
+
+        return messageRepository.save(messageModel);
     }
 
     public Iterable<MessageModel> getAllMessages() {
@@ -39,69 +41,50 @@ public class MessageService {
 
     public Iterable<MessageModel> getMessagesBySenderId(Long senderId) {
         UserModel sender = userRepository.findById(senderId).orElse(null);
-        assert sender != null;
-        return messageRepository.findAllBySender(sender);
+        return sender != null ? messageRepository.findAllBySender(sender) : Collections.emptyList();
     }
 
     public Iterable<MessageModel> getMessagesByReceiverId(Long receiverId) {
         UserModel receiver = userRepository.findById(receiverId).orElse(null);
-        Iterable<ProductModel> products = productRepository.findAllByUser(receiver);
-        List<MessageModel> messages = new ArrayList<>();
-        for (ProductModel product : products) {
-            messages.addAll((List<MessageModel>) messageRepository.findAllByProduct(product));
-        }
-        return messages;
+        return receiver != null ? messageRepository.findAllByReceiver(receiver) : Collections.emptyList();
     }
 
     public Iterable<MessageModel> getMessagesForUser(Long userId) {
-        HashSet<MessageModel> messages = new HashSet<>();
         UserModel user = userRepository.findById(userId).orElse(null);
-        assert user != null;
-        messages.addAll((List<MessageModel>) messageRepository.findAllBySender(user));
-        messages.addAll((List<MessageModel>) messageRepository.findAllByReceiver(user));
+        if (user == null) return Collections.emptyList();
+
+        Set<MessageModel> messages = new HashSet<>();
+        messages.addAll(messageRepository.findAllBySender(user));
+        messages.addAll(messageRepository.findAllByReceiver(user));
         return messages;
     }
+    public Iterable<MessageModel> getMessagesBySenderAndReceiver(Long userId1, Long userId2, boolean includeReversed) {
+        if (includeReversed) {
+            return messageRepository.findMessagesBetweenUsers(userId1, userId2);
+        }
+        return messageRepository.findMessagesBetweenUsers(userId1, userId2);
+    }
+    
+    
 
     public Object getMessagesFromHighestBidder(Long productId) {
         ProductModel productModel = productRepository.findById(productId).orElse(null);
-        assert productModel != null;
-        HashSet<MessageModel> messages = new HashSet<>();
+        if (productModel == null) return null;
+
         List<BidModel> bids = bidRepository.findAllByProduct(productModel);
-        Long highestBid = null;
+        if (bids.isEmpty()) return null;
 
-        for (BidModel bid : bids) {
-            if (bid.getBid() > highestBid) {
-                highestBid = bid.getBid();
-            }
-        }
-        
-        for (BidModel bid : bids) {
-            if (bid.getBid() == highestBid) {
-                messages.addAll(
-                        (List<MessageModel>) messageRepository.findAllByProductAndSender(productModel, bid.getUser()));
-                messages.addAll((List<MessageModel>) messageRepository.findAllByProductAndReceiver(productModel,
-                        bid.getUser()));
-                Map<String, Object> response = new HashMap<>();
-                response.put("messages", messages);
-                response.put("highestBid", highestBid);
-                response.put("bidder", bid.getUser());
-                return response;
-            }
-        }
-        return null;
+        BidModel highestBid = Collections.max(bids, Comparator.comparing(BidModel::getBid));
+        UserModel highestBidder = highestBid.getUser();
 
-    }
+        Set<MessageModel> messages = new HashSet<>();
+        messages.addAll(messageRepository.findAllBySender(highestBidder));
+        messages.addAll(messageRepository.findAllByReceiver(highestBidder));
 
-    public Iterable<MessageModel> getMessagesByProductAndSender(Long productId, Long senderId) {
-        ProductModel productModel = productRepository.findById(productId).orElse(null);
-        assert productModel != null;
-        UserModel sender = userRepository.findById(senderId).orElse(null);
-        UserModel receiver = userRepository.findById(productModel.getUser().getUserId()).orElse(null);
-        assert sender != null;
-        assert receiver != null;
-        HashSet<MessageModel> messages = new HashSet<>();
-        messages.addAll((List<MessageModel>) messageRepository.findAllByProductAndSender(productModel, sender));
-        messages.addAll((List<MessageModel>) messageRepository.findAllByProductAndReceiver(productModel, sender));
-        return messages;
+        Map<String, Object> response = new HashMap<>();
+        response.put("messages", messages);
+        response.put("highestBid", highestBid.getBid());
+        response.put("bidder", highestBidder);
+        return response;
     }
 }
