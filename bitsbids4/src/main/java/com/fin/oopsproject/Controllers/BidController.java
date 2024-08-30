@@ -1,7 +1,5 @@
 package com.fin.oopsproject.Controllers;
 
-import com.fin.oopsproject.Model.BidModel;
-import com.fin.oopsproject.Model.ProductModel;
 import com.fin.oopsproject.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +12,7 @@ public class BidController {
 
     // Read
     @GetMapping(path = "/")
-    public Iterable<BidModel> getAllBids() {
+    public Iterable<BidResponseDTO> getAllBids() {
         return bidService.getAllBids();
     }
 
@@ -26,7 +24,7 @@ public class BidController {
         }
 
     @GetMapping(path = "/{userId}")
-    public Iterable<BidModel> getBidsByUserId(@PathVariable Long userId) {
+    public Iterable<BidResponseDTO> getBidsByUserId(@PathVariable Long userId) {
         return bidService.getBidsByUserId(userId);
     }
 
@@ -43,5 +41,10 @@ public class BidController {
     @GetMapping(path = "/products/{userId}")
     public Iterable<ProductModel> getBiddedProducts(@PathVariable Long userId) {
         return bidService.getProductsByUserId(userId);
+    }
+
+    @GetMapping(path = "/product/{productId}")
+    public Iterable<BidResponseDTO> getAllBidsForProduct(@PathVariable Long productId) {
+        return bidService.getBidByProductId(productId);
     }
 }

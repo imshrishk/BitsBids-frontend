@@ -16,4 +16,12 @@ public interface ProductRepository extends JpaRepository<ProductModel, Long> {
     List<ProductModel> findAllBySold(String sold);
 
     Iterable<ProductModel> findAllByUser(UserModel userModel);
+
+    Iterable<ProductModel> findAllByUserAndSold(UserModel userModel, String sold);
+
+    Iterable<ProductModel> findAllBySoldNot(String sold);
+
+     // Method to find all products by category and sold status
+     Iterable<ProductModel> findAllByCategoryAndSold(String category, String sold);
+
 }

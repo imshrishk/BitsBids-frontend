@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findById(Long userId); // Optional is a container object used to represent a value that might be present or absent. It helps to avoid NullPointerException by providing methods to check if a value is present and handle the absence of a value gracefully.
     boolean existsByEmail(String email);
 
+
 }

@@ -54,8 +54,8 @@ public class MessageService {
         if (user == null) return Collections.emptyList();
 
         Set<MessageModel> messages = new HashSet<>();
-        messages.addAll(messageRepository.findAllBySender(user));
-        messages.addAll(messageRepository.findAllByReceiver(user));
+        // messages.addAll(messageRepository.findAllBySender(user));
+        // messages.addAll(messageRepository.findAllByReceiver(user));
         return messages;
     }
     public Iterable<MessageModel> getMessagesBySenderAndReceiver(Long userId1, Long userId2, boolean includeReversed) {
@@ -78,8 +78,8 @@ public class MessageService {
         UserModel highestBidder = highestBid.getUser();
 
         Set<MessageModel> messages = new HashSet<>();
-        messages.addAll(messageRepository.findAllBySender(highestBidder));
-        messages.addAll(messageRepository.findAllByReceiver(highestBidder));
+        // messages.addAll(messageRepository.findAllBySender(highestBidder));
+        // messages.addAll(messageRepository.findAllByReceiver(highestBidder));
 
         Map<String, Object> response = new HashMap<>();
         response.put("messages", messages);

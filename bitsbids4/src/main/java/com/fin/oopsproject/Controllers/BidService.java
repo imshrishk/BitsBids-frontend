@@ -1,9 +1,13 @@
 package com.fin.oopsproject.Controllers;
 
 import com.fin.oopsproject.Model.*;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,10 +24,24 @@ public class BidService  {
     @Autowired
     private UserRepository userRepository;
 
-    public List<BidModel> getAllBids() {
-        return bidRepository.findAllBy();
+    public List<BidResponseDTO> getAllBids() {
+        List<BidModel> bidModels = bidRepository.findAllBy();
+        List<BidResponseDTO> response = new ArrayList<>();
+    
+        for (BidModel bid : bidModels) {
+            BidResponseDTO dto = new BidResponseDTO();
+            dto.setUserId(bid.getUser().getUserId());
+            dto.setBidId(bid.getBidId());
+            dto.setBid(bid.getBid());
+            dto.setProductId(bid.getProduct().getProductId());
+            dto.setTime(bid.getTime());
+            dto.setActiveStatus(bid.isActive());
+            response.add(dto);
+        }
+    
+        return response;
     }
-
+    
     public BidModel addBid(Long productId, Long userId, Long bidAmount) {
         Date currentDate = new Date(); // Get the current date and time
     
@@ -80,11 +98,26 @@ public class BidService  {
     }
     
     
-    public Iterable<BidModel> getBidsByUserId(Long userId) {
-        UserModel userModel = userRepository.findById(userId).orElse(null);
-        assert userModel != null;
-        return bidRepository.findAllByUserId(userModel);
+    public List<BidResponseDTO> getBidsByUserId(Long userId) {
+        UserModel userModel = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        
+        Iterable<BidModel> bids = bidRepository.findAllByUserId(userModel);
+    
+        List<BidResponseDTO> response = new ArrayList<>();
+        for (BidModel bid : bids) {
+            BidResponseDTO dto = new BidResponseDTO();
+            dto.setUserId(bid.getUser().getUserId());
+            dto.setBidId(bid.getBidId());
+            dto.setBid(bid.getBid());
+            dto.setProductId(bid.getProduct().getProductId());
+            dto.setTime(bid.getTime());
+            dto.setActiveStatus(bid.isActive());
+            response.add(dto);
+        }
+        return response;
     }
+    
 
     public Iterable<BidModel> getActiveBidsByUserId(Long userId) {
         UserModel userModel = userRepository.findById(userId).orElse(null);
@@ -148,4 +181,24 @@ public BidModel freezeBid(Long bidId) {
         }
         return products;
     }
+    
+public List<BidResponseDTO> getBidByProductId(Long productId) {
+    ProductModel productModel = productRepository.findById(productId)
+            .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+    Iterable<BidModel> bids = bidRepository.findAllByProduct(productModel);
+
+    List<BidResponseDTO> response = new ArrayList<>();
+    for (BidModel bid : bids) {
+        BidResponseDTO dto = new BidResponseDTO();
+        dto.setUserId(bid.getUser().getUserId());
+        dto.setBidId(bid.getBidId());
+        dto.setBid(bid.getBid());
+        dto.setProductId(bid.getProduct().getProductId()); // or appropriate method to get productId
+        dto.setTime(bid.getTime());
+        dto.setActiveStatus(bid.isActive()); // Assuming `isActiveStatus()` method exists
+        response.add(dto);
+    }
+    return response;
+}
+
 }

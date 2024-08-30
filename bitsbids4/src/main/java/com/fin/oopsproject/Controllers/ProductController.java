@@ -45,6 +45,10 @@ public class ProductController {
     public Iterable<ProductModel> getAllProducts() {
         return productService.getAllProducts();
     }
+    @GetMapping(path = "/listUnsold")
+    public Iterable<ProductModel> getUnsoldProducts() {
+        return productService.getAllUnsoldProducts();
+    }
 
     // Get by category
     @GetMapping(path = "/listByCategory")
@@ -52,6 +56,14 @@ public class ProductController {
         return productService.getProductsByCategory(category);
     }
     
+
+        // Get by category and sold status
+    @GetMapping(path = "/listByCategoryAndStatus")
+    public Iterable<ProductModel> getProductsByCategoryAndSoldStatus(
+            @RequestParam String category, 
+            @RequestParam String soldStatus) {
+        return productService.getProductsByCategoryAndSoldStatus(category, soldStatus);
+    }
 
     //@GetMapping(path = "/featured")
     //public Iterable<ProductModel> getFeaturedProducts() {

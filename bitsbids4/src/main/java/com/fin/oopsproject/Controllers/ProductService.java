@@ -110,7 +110,19 @@ public ProductModel updateProduct(ProductModel productModel) {
         products.removeIf(product -> "sold".equals(product.getSold()));//except those that have been sold
         return products;
     }
-
+    public Iterable<ProductModel> getAllUnsoldProducts() {
+        return productRepository.findAllBySoldNot("sold");
+    }
+    
+    public Iterable<ProductModel> getProductsByCategoryAndSoldStatus(String category, String soldStatus) {
+        return productRepository.findAllByCategoryAndSold(category, soldStatus);
+    }
+    
+    
+    public Iterable<ProductModel> getSoldProductsByUser(UserModel user) {
+        return productRepository.findAllByUserAndSold(user, "sold");
+    }
+    
     // Get by category
     public Iterable<ProductModel> getProductsByCategory(String category) {
         return productRepository.findByCategory(category);

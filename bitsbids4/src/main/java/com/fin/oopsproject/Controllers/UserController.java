@@ -1,6 +1,10 @@
 package com.fin.oopsproject.Controllers;
 
+import com.fin.oopsproject.Model.LoginRequest;
 import com.fin.oopsproject.Model.UserModel;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,6 +28,19 @@ public class UserController {
     @GetMapping(path = "/{userId}")
     public UserModel getUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        Optional<UserModel> userOptional = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+        
+        if (userOptional.isPresent()) {
+            UserModel user = userOptional.get();
+            // Return success response with user details or token
+            return ResponseEntity.ok(user);
+        } else {
+            // Return failure response
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
     }
 
     @PostMapping(path = "/check")
