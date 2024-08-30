@@ -7,6 +7,8 @@ import { Search } from "@mui/icons-material";
 import { Button, Input } from "@mui/material";
 import * as React from "react";
 import * as Categories from "./categories";
+import axios from 'axios';
+import { useState, useMemo, useEffect } from 'react';
 
 /**
  * The Products component.
@@ -15,40 +17,48 @@ export interface IProductsProps {}
 
 export default function Products(props: IProductsProps) {
   const { checkLogin } = useLogin();
-  const [products, setProducts] = React.useState<Product[]>([]);
+  const [products, setProducts] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
+
   const displayProducts = React.useMemo(() => {
     return products.filter((product) => {
-      if (selectedCategory !== "") {
-        if (product.category !== selectedCategory) return false;
-      }
-      const nameSearch = product.productName
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      const descSearch = product.details
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      const categorySearch = product.category
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      return nameSearch || descSearch || categorySearch;
+        if (selectedCategory !== "" && product.category !== selectedCategory) return false;
+        const searchLower = search.toLowerCase();
+        const nameSearch = product.productName.toLowerCase().includes(searchLower);
+        const descSearch = product.details.toLowerCase().includes(searchLower);
+        const categorySearch = product.category.toLowerCase().includes(searchLower);
+
+        // Check if username exists and includes the search term
+        const usernameSearch = product.user?.username?.toLowerCase().includes(searchLower) || false;
+        
+        return nameSearch || descSearch || categorySearch || usernameSearch;
     });
-  }, [products, search, selectedCategory]);
+}, [products, search, selectedCategory]);
+
 
   /**
    * Fetches products from the API.
    */
   const getProducts = async () => {
-    const res = await fetch("/api/products");
-    const data = await res.json();
-    setProducts(data.products);
-  };
-
+    try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/listAll`);
+        const data = response.data;
+        console.log('API Response:', data);  // Check the raw data
+        setProducts(data || []);    // Adjust if needed
+        console.log('Products State:', products);  // Check the state right after setting
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+    }
+};
   React.useEffect(() => {
     checkLogin();
     getProducts();
   }, []);
+  React.useEffect(() => {
+    console.log('Products State:', products);
+}, [products]);
 
   return (
     <div>

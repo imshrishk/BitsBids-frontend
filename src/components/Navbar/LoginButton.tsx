@@ -9,19 +9,19 @@ import Link from "next/link";
  */
 export default function LoginButton() {
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const { checkLoginWIthoutRedirect } = useLogin();
+  const { checkLogin } = useLogin();
 
   /**
    * Checks the login status and updates the state.
    */
   const checkLoginStatus = async () => {
-    const res = await checkLoginWIthoutRedirect();
+    const res = await checkLogin();
     setLoggedIn(res);
   };
 
   React.useEffect(() => {
     checkLoginStatus();
-  }, [checkLoginWIthoutRedirect]);
+  }, [checkLogin]);
 
   return (
     <Link

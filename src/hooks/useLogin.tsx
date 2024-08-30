@@ -1,92 +1,118 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { provider } from "@/firebase";
+
+interface UserData {
+  username: string;
+  password: string;
+  email: string;
+  campusID: string;
+  hostel: string;
+  phone: string;
+  money: number;
+}
+
 import axios from "axios";
+import Cookies from 'js-cookie'; // Add this import
 
 /**
  * The useLogin hook.
  */
 const useLogin = () => {
-  const auth = getAuth();
+
+  /**
+   * Handles user registration.
+   */
+  const register = async (userData: UserData) => {
+    try {
+      const response = await axios.post("/api/register", userData);
+
+      if (response.data.success) {
+        alert("Registration successful!");
+        window.location.href = "/login"; // Redirect to login page after successful registration
+      } else {
+        alert("Registration failed: " + response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      alert("An error occurred during registration.");
+    }
+  };
 
   /**
    * Handles the login process.
    */
-  const handleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      const email = user.email;
 
-      if (!email) {
-        return;
-      }
+const handleLogin = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, {
+      email: email,
+      password: password,
+    });
 
-      // Check if email is a valid BITS Pilani email
-      // if (
-      //   email.startsWith("f") &&
-      //   email.endsWith("@hyderabad.bits-pilani.ac.in")
-      // ) {
-      const response = await axios.post("/api/login", {
-        email: email,
-        name: user.displayName,
-        photoURL: user.photoURL,
-        uid: user.uid,
-      });
-
-      if (response.data.login) {
-        window.location.href = "/products";
-        localStorage.setItem("user", JSON.stringify(response.data.login.userId));
-      } else {
-        window.location.href = "/login";
-        alert("Login Failed");
-      }
-      // } else {
-      //   // show error message
-      // }
-    } catch (error) {
-      console.log(error);
+    console.log(response.data);
+    
+    if (response.data) {
+      // Set a cookie
+      Cookies.set('userId', response.data.userId, { expires: 7 }); // Set the cookie to expire in 7 days
+      window.location.href = "/products";
+    } else {
+      window.location.href = "/login";
+      alert("Login Failed");
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   /**
    * Checks if the user is logged in.
    */
-  const checkLogin = async () => {
-    const user = localStorage.getItem("user");
-
-    if (user) {
-      try {
-        const response = await axios.post("/api/checkLogin", {
-          userId: user,
-        });
-
-        if (response.data.login) {
-          return true;
-        } else {
-          window.location.href = "/login";
-          return false;
-        }
-      } catch (error) {
-        console.log(error);
-        window.location.href = "/login";
-        return false;
-      }
+  const checkLogin = () => {
+    const userId = Cookies.get('userId');
+  
+    if (userId) {
+      // Cookie exists, user is considered logged in
+      return true;
     } else {
+      // No cookie, user is not logged in
       window.location.href = "/login";
       return false;
     }
   };
+const checkLogin2 = async () => {
+  const userId = Cookies.get('userId');
+
+  if (userId) {
+    try {
+      const response = await axios.post("/api/checkLogin", {
+        userId: userId,
+      });
+
+      if (response.data.login) {
+        return true;
+      } else {
+        window.location.href = "/login";
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      window.location.href = "/login";
+      return false;
+    }
+  } else {
+    window.location.href = "/login";
+    return false;
+  }
+};
+
 
   /**
    * Checks if the user is logged in without redirecting.
    */
-  const checkLoginWIthoutRedirect = async () => {
+  const checkLoginWithoutRedirect = async () => {
     const user = localStorage.getItem("user");
 
     if (user) {
       try {
+        // POST request to the Spring Boot backend to validate session
         const response = await axios.post("/api/checkLogin", {
           userId: user,
         });
@@ -105,7 +131,7 @@ const useLogin = () => {
     }
   };
 
-  return { handleLogin, checkLogin, checkLoginWIthoutRedirect };
+  return { register, handleLogin, checkLogin, checkLoginWithoutRedirect };
 };
 
 export default useLogin;

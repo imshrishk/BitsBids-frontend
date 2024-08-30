@@ -42,8 +42,18 @@ export default function ProductCard({
         <h3 className="text-lg font-bold">{product.productName}</h3>
         <p className="text-sm text-white mt-2">{product.details}</p>
         <p className="text-sm text-white mt-2">
+          Category: {product.category}
+        </p>
+        <p className="text-sm text-white mt-2">
           Starting Bid: Rs. {product.startingBid}
         </p>
+        
+        {/* User info */}
+        {product.user && product.user.username && (
+          <p className="text-sm text-white mt-2">
+            User: {product.user.username}
+          </p>
+        )}
 
         {/* View Details button */}
         {!product.sold && details && (

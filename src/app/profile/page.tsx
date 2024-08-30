@@ -20,7 +20,7 @@ const ProfilePage: React.FC = () => {
   const [productChats, setProductChats] = React.useState<ProfileChat[]>([]);
   const [user, setUser] = React.useState<User | null>(null);
 
-  const { checkLogin } = useLogin();
+  // const { checkLogin } = useLogin();
 
   /**
    * Fetches the current user's data.
@@ -137,7 +137,7 @@ const ProfilePage: React.FC = () => {
 
   React.useEffect(() => {
     getUser();
-    checkLogin();
+    // checkLogin();
     getProducts();
   }, []);
 
