@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm run next\" \"npm run spring\"",
     "next": "next dev",
-    "spring": "cd ../../backend && ./mvnw spring-boot:run || mvnw.cmd spring-boot:run",
+    "spring": "cd ../../../backend && ./mvnw spring-boot:run || mvnw.cmd spring-boot:run",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

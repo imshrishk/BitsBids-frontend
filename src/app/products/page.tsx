@@ -3,8 +3,8 @@
 import Product from "@/Types/product";
 import ProductCard from "@/components/ProductCard";
 import useLogin from "@/hooks/useLogin";
-import { Search } from "@mui/icons-material";
-import { Button, Input } from "@mui/material";
+import { Search, Clear } from "@mui/icons-material";
+import { Button, Input, IconButton, CircularProgress } from "@mui/material";
 import * as React from "react";
 import * as Categories from "./categories";
 import axios from 'axios';
@@ -20,6 +20,8 @@ export default function Products(props: IProductsProps) {
   const [products, setProducts] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   const displayProducts = React.useMemo(() => {
     return products.filter((product) => {
@@ -28,37 +30,34 @@ export default function Products(props: IProductsProps) {
         const nameSearch = product.productName.toLowerCase().includes(searchLower);
         const descSearch = product.details.toLowerCase().includes(searchLower);
         const categorySearch = product.category.toLowerCase().includes(searchLower);
-
-        // Check if username exists and includes the search term
         const usernameSearch = product.user?.username?.toLowerCase().includes(searchLower) || false;
-        
         return nameSearch || descSearch || categorySearch || usernameSearch;
     });
-}, [products, search, selectedCategory]);
-
+  }, [products, search, selectedCategory]);
 
   /**
    * Fetches products from the API.
    */
   const getProducts = async () => {
+    setLoading(true);
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/listAll`);
+        const response = await axios.get(`http://localhost:8081/api/v1/products/listAll`);
         const data = response.data;
-        console.log('API Response:', data);  // Check the raw data
-        setProducts(data || []);    // Adjust if needed
-        console.log('Products State:', products);  // Check the state right after setting
+        setProducts(data || []); 
+        setError(null);
     } catch (error) {
         console.error('Error fetching products:', error);
         setProducts([]);
+        setError('Failed to fetch products.');
+    } finally {
+        setLoading(false);
     }
-};
+  };
+
   React.useEffect(() => {
     checkLogin();
     getProducts();
   }, []);
-  React.useEffect(() => {
-    console.log('Products State:', products);
-}, [products]);
 
   return (
     <div>
@@ -67,25 +66,34 @@ export default function Products(props: IProductsProps) {
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-                Our Products
+                Explore the products
               </h1>
-              <p className="mx-auto max-w-[700px] text-zinc-500 md:text-xl dark:text-zinc-400">
-                Explore the products.
-              </p>
             </div>
           </div>
         </div>
       </section>
       <section className="w-full py-12 md:py-24 lg:py-32 flex justify-center items-center">
+        <div className="relative w-1/2 max-w-lg">
         <Input
           placeholder="Search for products"
-          className="w-1/2"
+          className="w-full border border-gray-600 text-white bg-gray-800 placeholder-gray-400"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          endAdornment={<Search />}
+          endAdornment={
+            search ? (
+              <IconButton
+                onClick={() => setSearch("")}
+                className="text-white"
+              >
+                <Clear />
+              </IconButton>
+            ) : (
+              <Search className="text-white" />
+            )
+          }
         />
+        </div>
       </section>
-      {/* Section for category filter */}
       <section className="w-full py-5 md:py-5 lg:py-5 flex justify-center items-center flex-wrap">
         {Categories.default.map((category) => (
           <Button
@@ -93,24 +101,27 @@ export default function Products(props: IProductsProps) {
               selectedCategory !== category.name ? "bg-zinc-500" : "bg-black"
             } text-white rounded-md p-2 m-2 min-w-min`}
             onClick={() => {
-              if (selectedCategory !== category.name) {
-                setSelectedCategory(category.name);
-              } else {
-                setSelectedCategory("");
-              }
+              setSelectedCategory(prev => prev !== category.name ? category.name : "");
             }}
+            key={category.name}
           >
             {category.name}
           </Button>
         ))}
       </section>
-      <section className="w-full">
-        <div className="flex w-screen">
-          <div className="flex flex-wrap overflow-hidden w-full gap-10 justify-center">
-            {displayProducts.map((product: any) => (
+      <section className="w-full py-12">
+        <div className="flex w-screen flex-wrap gap-10 justify-center">
+          {loading ? (
+            <CircularProgress />
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : displayProducts.length > 0 ? (
+            displayProducts.map((product: any) => (
               <ProductCard details product={product} key={product.productId} />
-            ))}
-          </div>
+            ))
+          ) : (
+            <p>No products found.</p>
+          )}
         </div>
       </section>
     </div>

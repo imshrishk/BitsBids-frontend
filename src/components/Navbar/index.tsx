@@ -21,7 +21,7 @@ export default async function Navbar(props: IAppProps) {
           src="https://64.media.tumblr.com/44fe84f359eb2f71955496c3e7e9aa40/tumblr_pl2q17lSiN1uhw068o1_r1_1280.gifv"
           className="h-16 w-20 mr-2 rounded-full object-contain"
         />
-        <h1 className="text-2xl font-bold text-white">BITS BID</h1>
+        <h1 className="text-2xl font-bold text-white">BITS BIDS</h1>
       </Link>
 
       {/* Navigation links */}
