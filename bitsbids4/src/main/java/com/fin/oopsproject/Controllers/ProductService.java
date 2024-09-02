@@ -36,15 +36,20 @@ public class ProductService {
 
     public void checkAuctionAndTransfer(Long productId) {
         ProductModel productModel = productRepository.findById(productId).orElseThrow(() -> 
-            new IllegalArgumentException("Product not found"));
+            new IllegalArgumentException("Product not found, HAS BEEN DELETED FROM MAIN DATABASE"));
 
         Date currentDate = new Date();
         
         if (currentDate.after(productModel.getExpiryDate())) {
-            transService.transferMoney(productModel);
-            productModel.setSold("sold"); // Mark product as sold or update status as needed
+            boolean success = transService.transferMoney(productModel);
+            if (!success) {
+                productModel.setSold("off_auction"); // Set to off_auction if transfer failed
+            } else {
+                productModel.setSold("sold"); // Mark product as sold if transfer succeeded
+            }
             productRepository.save(productModel);
         }
+        
     }
     
     // USer  needs to pass in everything in request

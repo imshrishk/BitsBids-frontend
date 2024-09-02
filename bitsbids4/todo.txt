@@ -3,35 +3,28 @@ frontend sends request -> "doesUserPasswordExist" ->response yes? -> give it a t
 https://chatgpt.com/c/4dfe230d-df2f-4092-a581-3d4c3264463b 
 use the link above fot configuring cookies and stufff
 
-COOKIES AINT THAT GREAT
-
-so once we have user signed in with a cookie, he should be able to:
-
-    On his profile: (all the functionalities exist)
-    Get all his bids with frozen status
-    get his listed products
-    get his info which has given and edit it
+COOKIES 
+-- CURRENTLY SOME SHITTY COOOKIES ON CLIENT
+-- FIGURE OUT AND INTEGRATE FRONTEND WITH CLIENT SIDE COOKIES, ONCE DONE SETUP SERVER SIDE (1 DAY)
 
 
-Required Functionalities: 
+-- ON BID TIME EXPIRING, MONEY TRANSFER............ TEST THIS FEATURE OUT
+        --- ADD TIME LIMIT, AFTER WHICH PRODUCT "OFF_AUCTION" IF NO BID MADE
+        --- WHEN TIME LIMIT OVER AUTOMATICALLY "OFF_AUCTION" OR "SOLD"
 
-    seller should be able to freeze bid
+(1 DAY, GHADA MAZDURI)
+-- IMAGES AND WHERE/HOW TO STORE
+-- MODULARISE AND MAKE FURTHER SUBFOLDERS
+-- SELLER REVIEW TABLE
+    --- USER HAS A RATING
+    --- A PERSON CAN SEE SELLER'S SOLD PRODUCTS AND REVIEWS ABOUT HIM, IFF A USER HAS BOUGHT A PRODUCT FROM SELLER ONLY 
+    THEN CAN HE LEAVE A REVIEW
 
-    seller must be able to choose 
 
-    on bid being accepted money transfer from buyer to seller
+-- WHAT IF MULTIPLE PEOPLE ADD A BID @SAME TIME (CONCURRENCY & THREADS) (1 DAY)
     
-    FIGURING OUT IMAGES AND WHERE TO STORE THEM
+-- FIGURE OUT MESSAGING FEATURES WITH SOCKET (2 DAYS)
 
 
-Later functionalities: 
 
-    concurrency control for bids
 
-    time limits for bidds
-
-    messaging features
-
-    block users from buying
-
-    able to give reviews to sellers (sellers having rating, can rate a seller only if u have bought from him)

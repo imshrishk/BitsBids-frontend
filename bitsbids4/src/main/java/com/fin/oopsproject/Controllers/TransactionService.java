@@ -14,16 +14,25 @@ public class TransactionService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void transferMoney(ProductModel product) {
-        UserModel buyer = product.getCurrentBid().getUser();
+    public boolean transferMoney(ProductModel product) {
+        BidModel topBid = product.getCurrentBid();
+        if (topBid == null) {
+            // Log error or perform additional error handling
+            return false; // Indicate failure
+        }
+    
+        UserModel buyer = topBid.getUser();
         UserModel seller = product.getUser();
-        BigDecimal amount = BigDecimal.valueOf(product.getCurrentBid().getBid());
-
+        BigDecimal amount = BigDecimal.valueOf(topBid.getBid());
+    
         TransactionModel transaction = new TransactionModel(product, buyer, seller, amount, "completed");
         transactionRepository.save(transaction);
-
-        // Add any additional money transfer logic here
+    
+        // Additional money transfer logic here
+    
+        return true; // Indicate success
     }
+    
 
     public Iterable<TransactionModel> getAllTrans() {
         return transactionRepository.findAll();
